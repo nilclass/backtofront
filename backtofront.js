@@ -36,6 +36,12 @@ if(typeof(window) != 'undefined') {//client
         if(typeof(cb)=='function') {
           cb();
         }
+      } else if(obj.error) {
+        if(backtofront.onerror) {
+          backtofront.onerror(obj.error);
+        } else {
+          console.error("UNCAUGHT ERROR:", obj.error);
+        }
       } else {
         if(running[obj.callback]) {
           console.log('running', typeof(running[obj.callback]), obj.args);
@@ -146,7 +152,14 @@ if(typeof(window) != 'undefined') {//client
         try {
           modules[obj.module][obj.method].apply(null, argList);
         } catch(exc) {
-          console.log("ERROR: ", exc);
+          var error = {};
+          if(typeof(exc) === 'object' && exc instanceof Error) {
+            error.message = exc.message;
+            error.stack = exc.stack;
+          } else {
+            error = exc;
+          }
+          conn.write(JSON.stringify({ error: error }));
         };
         return;
       }
