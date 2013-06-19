@@ -1,6 +1,11 @@
 if(typeof(window) != 'undefined') {//client
-  window.backtofront = {};
-  window.backtofront.connect = function(url, token, cb) {
+  var backtofront = {};
+  if(typeof(window.define) === 'function') {
+    define([], function() { return backtofront; });
+  } else {
+    window.backtofront = backtofront;
+  }
+  backtofront.connect = function(url, token, cb) {
     var sock = new WebSocket(url);
     sock.onopen = function() {
       console.log('open');
