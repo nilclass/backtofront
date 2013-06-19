@@ -48,15 +48,15 @@ if(typeof(window) != 'undefined') {//client
      };
     sock.onclose = function() {
       console.log('closed');
+      if(backtofront.onerror) {
+        if(open) {
+          backtofront.onerror('connection-closed', "Connection was closed. Reload to save the day.");
+        } else {
+          backtofront.onerror('connection-failed', "Failed to connect to backend.");
+        }
+      }
     };
     var running = {};
-      if(backtofront.onerror) {
-          if(open) {
-              backtofront.onerror('connection-closed', "Connection was closed. Reload to save the day.");
-          } else {
-              backtofront.onerror('connection-failed', "Failed to connect to backend.");
-          }
-      }
     function send(module, method, args) {
       for(var i=0; i<args.length; i++) {
         if(typeof(args[i])=='function') {
