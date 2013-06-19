@@ -143,7 +143,11 @@ if(typeof(window) != 'undefined') {//client
           }
         }
         console.log('apply', argList);
-        modules[obj.module][obj.method].apply(null, argList);
+        try {
+          modules[obj.module][obj.method].apply(null, argList);
+        } catch(exc) {
+          console.log("ERROR: ", exc);
+        };
         return;
       }
       conn.write(JSON.stringify({
